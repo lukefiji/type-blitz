@@ -6,7 +6,7 @@ function App() {
   return (
     <div className="flex min-h-screen w-full">
       <div className="mx-auto mt-6 flex flex-col content-center gap-2">
-        <h1 className="text-center text-2xl font-bold">
+        <h1 role="heading" className="text-center text-2xl font-bold">
           Quick React Boilerplate
         </h1>
         <button onClick={() => setCount((count) => count + 1)}>

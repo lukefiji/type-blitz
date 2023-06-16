@@ -2,7 +2,7 @@ import usePrompter from '@/hooks/usePrompter';
 import CharacterList from './CharacterList';
 
 function App() {
-  const { prompt, userInput, handleKeyDown } = usePrompter(
+  const { prompt, userInput, numErrors, handleKeyDown } = usePrompter(
     'The quick brown fox jumps over the lazy dog.'
   );
 
@@ -15,11 +15,13 @@ function App() {
 
         <CharacterList prompt={prompt} userInput={userInput} />
 
+        <div>Errors: {numErrors}</div>
+
         <input
           type="text"
           onKeyDown={handleKeyDown}
           value={userInput.join('')}
-          onChange={() => {}}
+          onChange={() => null}
           className="border-b-2 border-solid border-black"
         />
       </div>

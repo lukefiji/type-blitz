@@ -17,3 +17,5 @@ export const VALID_KEYS: Set<KeyboardEvent['key']> = new Set([
   ...punctuationKeys,
   ...otherKeys,
 ]);
+
+export const SPACE_KEY = '␣';

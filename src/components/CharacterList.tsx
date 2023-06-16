@@ -1,4 +1,4 @@
-interface Props {}
+import { SPACE_KEY } from '@/constants/keys';
 import { Prompt, UserInput } from '@/hooks/usePrompter';
 import clsxMerge from '@/utils/clsxMerge';
 
@@ -12,9 +12,12 @@ const CharacterList = ({ prompt, userInput }: Props) => {
     <div className="flex max-w-lg flex-wrap justify-center gap-1">
       {prompt.map((char, i) => {
         const inputChar = i in userInput ? userInput[i] : null;
-        const isSpaceChar = char === ' ';
+
         const isInputMatching = inputChar === char;
-        const isInputMismatching = inputChar !== null && !isInputMatching;
+        const isInputMismatching = !isInputMatching && inputChar !== null;
+
+        const displayChar = inputChar ?? char;
+        const isSpaceChar = displayChar === ' ';
 
         return (
           <div
@@ -23,11 +26,14 @@ const CharacterList = ({ prompt, userInput }: Props) => {
               'flex h-12 w-8 flex-shrink-0 items-center justify-center',
               'rounded-md border-2 border-solid',
               isSpaceChar && 'bg-gray-100 text-gray-300',
-              isInputMatching && 'bg-green-300',
-              isInputMismatching && 'bg-red-200',
+              isInputMatching && 'border-gray-400 bg-green-300 text-gray-800',
+              isInputMismatching && 'border-gray-400 bg-red-200 text-gray-800',
+              isSpaceChar &&
+                inputChar !== null &&
+                'border-gray-400 text-gray-400',
             ])}
           >
-            <span>{isSpaceChar ? '_' : char}</span>
+            <span>{isSpaceChar ? SPACE_KEY : displayChar}</span>
           </div>
         );
       })}

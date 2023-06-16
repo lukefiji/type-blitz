@@ -6,8 +6,6 @@ describe('App', () => {
   it('Renders heading', () => {
     render(<App />);
 
-    expect(screen.getByRole('heading')).toHaveTextContent(
-      'Quick React Boilerplate'
-    );
+    expect(screen.getByRole('heading')).toHaveTextContent('Type Blitz');
   });
 });

@@ -2,7 +2,7 @@ import usePrompter from '@/hooks/usePrompter';
 import CharacterList from './CharacterList';
 
 function App() {
-  const { prompt, userInput, numErrors, handleKeyDown } = usePrompter(
+  const { promptData, userInput, numErrors, handleKeyDown } = usePrompter(
     'The quick brown fox jumps over the lazy dog.'
   );
 
@@ -13,7 +13,7 @@ function App() {
           Type Blitz
         </h1>
 
-        <CharacterList prompt={prompt} userInput={userInput} />
+        <CharacterList promptData={promptData} userInput={userInput} />
 
         <div>Errors: {numErrors}</div>
 

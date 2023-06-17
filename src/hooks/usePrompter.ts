@@ -1,41 +1,106 @@
 import { VALID_KEYS } from '@/constants/keys';
-import { KeyboardEvent, useCallback, useState } from 'react';
+import { KeyboardEvent, useCallback } from 'react';
+import { useImmerReducer } from 'use-immer';
 
-export type Prompt = Array<string>;
+type PromptChar = {
+  char: string;
+  index: number;
+};
+
+export type PromptData = Array<PromptChar>;
 export type UserInput = Array<string>;
 
-function usePrompter(message: string): {
-  prompt: Prompt;
+type PromptState = {
+  promptData: PromptData;
+  userInput: UserInput;
+  numErrors: number;
+  inputLength: number;
+};
+
+enum ActionTypes {
+  keyDown = 'TYPE',
+}
+
+type PromptAction = {
+  type: ActionTypes;
+  payload: string;
+};
+
+function promptReducer(draft: PromptState, action: PromptAction) {
+  switch (action.type) {
+    case ActionTypes.keyDown: {
+      const key = action.payload;
+
+      if (!VALID_KEYS.has(key)) {
+        break;
+      }
+
+      // Handle backspace
+      if (key === 'Backspace') {
+        draft.userInput.pop();
+        break;
+      }
+
+      if (draft.userInput.length >= draft.promptData.length) {
+        break;
+      }
+
+      // Handle all other valid keys
+      const charIdx = draft.userInput.length;
+
+      // Increment errors if invalid
+      if (draft.promptData[charIdx].char !== key) {
+        draft.numErrors += 1;
+      }
+
+      draft.userInput.push(key);
+      break;
+    }
+    default: {
+      break;
+    }
+  }
+}
+
+const initialPromptState = {
+  prompt: [],
+  userInput: [],
+  numErrors: 0,
+  inputLength: 0,
+};
+
+function getInitialPromptState(message: string): PromptState {
+  // Split message into array of characters
+  const trimmedMessage = message.trim().split('');
+
+  // Convert each character into PromptChar[]
+  const promptData: PromptData = trimmedMessage.map((char, index) => ({
+    char,
+    index,
+  }));
+
+  return { ...initialPromptState, promptData };
+}
+
+function usePrompter2(message: string): {
+  promptData: PromptData;
   userInput: UserInput;
   numErrors: number;
   handleKeyDown: (e: KeyboardEvent<HTMLInputElement>) => void;
 } {
-  const [userInput, setUserInput] = useState<UserInput>([]);
-  const [numErrors, setNumErrors] = useState<number>(0);
-  const prompt: Prompt = message.split('');
-
-  const handleKeyDown = useCallback(
-    (e: KeyboardEvent<HTMLInputElement>) => {
-      const key = e.key;
-
-      if (!VALID_KEYS.has(key)) return;
-
-      if (key === 'Backspace') {
-        if (userInput.length === 0) return;
-        setUserInput((input) => input.slice(0, input.length - 1));
-      } else {
-        if (prompt[userInput.length] !== key) {
-          setNumErrors((val) => (val += 1));
-        }
-
-        setUserInput((input) => [...input, key]);
-      }
-    },
-
-    [userInput, prompt]
+  const [{ promptData, userInput, numErrors }, dispatch] = useImmerReducer(
+    promptReducer,
+    initialPromptState,
+    () => getInitialPromptState(message)
   );
 
-  return { prompt, userInput, numErrors, handleKeyDown };
+  const handleKeyDown = useCallback(
+    (e: KeyboardEvent<HTMLInputElement>) =>
+      dispatch({ type: ActionTypes.keyDown, payload: e.key }),
+    [dispatch]
+  );
+
+  return { promptData, userInput, numErrors, handleKeyDown };
 }
 
-export default usePrompter;
+export default usePrompter2;

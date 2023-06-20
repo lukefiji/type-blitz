@@ -1,4 +1,4 @@
-import { VALID_KEYS } from '@/constants/keys';
+import { ENTER_DISPLAY_KEY, VALID_KEYS } from '@/constants/keys';
 import { KeyboardEvent, useCallback } from 'react';
 import { useImmerReducer } from 'use-immer';
 
@@ -47,6 +47,16 @@ function promptReducer(draft: PromptState, action: PromptAction) {
       // Handle all other valid keys
       const charIdx = draft.userInput.length;
 
+      // Handle enter
+      if (key === 'Enter') {
+        // Increment errors if invalid
+        if (draft.promptData[charIdx].char !== ENTER_DISPLAY_KEY) {
+          draft.numErrors += 1;
+        }
+        draft.userInput.push(ENTER_DISPLAY_KEY);
+        break;
+      }
+
       // Increment errors if invalid
       if (draft.promptData[charIdx].char !== key) {
         draft.numErrors += 1;
@@ -78,10 +88,16 @@ function getInitialPromptState(message: string): PromptState {
     index,
   }));
 
+  // Add enter key at end of string
+  promptData.push({
+    char: ENTER_DISPLAY_KEY,
+    index: promptData.length,
+  });
+
   return { ...initialPromptState, promptData };
 }
 
-function usePrompter2(message: string): {
+function usePrompter(message: string): {
   promptData: PromptData;
   userInput: UserInput;
   numErrors: number;
@@ -102,4 +118,4 @@ function usePrompter2(message: string): {
   return { promptData, userInput, numErrors, handleKeyDown };
 }
 
-export default usePrompter2;
+export default usePrompter;

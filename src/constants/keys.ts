@@ -8,7 +8,7 @@ const lowerAlphaKeys = alphabet.split('');
 const upperAlphaKeys = alphabet.toUpperCase().split('');
 const numericKeys = '0123456789'.split('');
 const punctuationKeys = '~`!@#$%^&*()-=_+,.<>/?;:\'"[]{}\\|'.split('');
-const otherKeys = ['Backspace', ' '];
+const otherKeys = ['Backspace', 'Enter', ' '];
 
 export const VALID_KEYS: Set<KeyboardEvent['key']> = new Set([
   ...lowerAlphaKeys,
@@ -18,4 +18,5 @@ export const VALID_KEYS: Set<KeyboardEvent['key']> = new Set([
   ...otherKeys,
 ]);
 
-export const SPACE_KEY = '␣';
+export const SPACE_DISPLAY_KEY = '␣';
+export const ENTER_DISPLAY_KEY = '↵';

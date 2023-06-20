@@ -1,10 +1,10 @@
 import { useMemo } from 'react';
-import { PromptData } from './usePrompter';
+import { CharData, PromptData } from './usePrompter';
 
 // Generate prompt words
-function usePromptWords(promptData: PromptData) {
+function usePromptWords(promptData: PromptData): CharData[][] {
   return useMemo(() => {
-    const wordData = [];
+    const wordData: CharData[][] = [];
 
     let currentWord = [];
     for (const charData of promptData) {

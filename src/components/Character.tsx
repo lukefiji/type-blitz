@@ -1,4 +1,4 @@
-import { SPACE_KEY } from '@/constants/keys';
+import { ENTER_DISPLAY_KEY, SPACE_DISPLAY_KEY } from '@/constants/keys';
 import { CharData, UserInput } from '@/hooks/usePrompter';
 import cn from '@/utils/cn';
 import { forwardRef } from 'react';
@@ -16,6 +16,8 @@ const Character = forwardRef<HTMLSpanElement, Props>(
 
     const displayChar = inputChar ?? charData.char;
     const isSpaceChar = displayChar === ' ';
+    const isEnterChar = displayChar === ENTER_DISPLAY_KEY;
+    const isSpecialChar = isSpaceChar || isEnterChar;
     const isCurrentChar = userInput.length === charData.index;
 
     return (
@@ -24,13 +26,17 @@ const Character = forwardRef<HTMLSpanElement, Props>(
         className={cn([
           'relative',
           'font-mono text-3xl font-light leading-snug  lg:text-4xl lg:leading-snug',
-          isSpaceChar && 'text-gray-200',
           isInputMatching && 'bg-green-200 text-gray-800',
           isInputMismatching && 'bg-red-200 text-gray-800',
-          isSpaceChar && inputChar !== null && 'text-gray-300',
+          isSpecialChar && 'text-gray-300',
+          isSpecialChar && inputChar !== null && 'text-gray-500',
         ])}
       >
-        {isSpaceChar ? SPACE_KEY : displayChar}
+        {isSpaceChar
+          ? SPACE_DISPLAY_KEY
+          : isEnterChar
+          ? ENTER_DISPLAY_KEY
+          : displayChar}
       </span>
     );
   }

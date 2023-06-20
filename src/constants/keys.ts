@@ -19,4 +19,4 @@ export const VALID_KEYS: Set<KeyboardEvent['key']> = new Set([
 ]);
 
 export const SPACE_DISPLAY_KEY = '␣';
-export const ENTER_DISPLAY_KEY = '↵';
+export const RETURN_DISPLAY_KEY = '↵';

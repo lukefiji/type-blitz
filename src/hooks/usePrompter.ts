@@ -2,12 +2,11 @@ import { VALID_KEYS } from '@/constants/keys';
 import { KeyboardEvent, useCallback } from 'react';
 import { useImmerReducer } from 'use-immer';
 
-type PromptChar = {
+export type CharData = {
   char: string;
   index: number;
 };
-
-export type PromptData = Array<PromptChar>;
+export type PromptData = Array<CharData>;
 export type UserInput = Array<string>;
 
 type PromptState = {

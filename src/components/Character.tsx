@@ -15,10 +15,11 @@ const Character = forwardRef<HTMLSpanElement, Props>(
     const isInputMismatching = !isInputMatching && inputChar !== null;
 
     const displayChar = inputChar ?? charData.char;
+    const isCurrentChar = userInput.length === charData.index;
+
     const isSpaceChar = displayChar === ' ';
     const isReturnChar = displayChar === RETURN_DISPLAY_KEY;
     const isSpecialChar = isSpaceChar || isReturnChar;
-    const isCurrentChar = userInput.length === charData.index;
 
     return (
       <span
@@ -32,11 +33,7 @@ const Character = forwardRef<HTMLSpanElement, Props>(
           isSpecialChar && inputChar !== null && 'text-gray-500',
         ])}
       >
-        {isSpaceChar
-          ? SPACE_DISPLAY_KEY
-          : isReturnChar
-          ? RETURN_DISPLAY_KEY
-          : displayChar}
+        {isSpaceChar ? SPACE_DISPLAY_KEY : displayChar}
       </span>
     );
   }

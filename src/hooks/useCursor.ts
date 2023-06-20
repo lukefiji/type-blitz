@@ -1,52 +1,38 @@
 import { UserInput } from '@/hooks/usePrompter';
-import { MutableRefObject, useEffect, useRef, useState } from 'react';
-
-type CursorPosition = {
-  display: 'none' | 'block';
-  top: number;
-  left: number;
-  height: number;
-};
+import { MutableRefObject, useEffect, useRef } from 'react';
 
 function useCursor(userInput: UserInput): {
   cursorRef: MutableRefObject<HTMLDivElement | null>;
   characterRef: MutableRefObject<HTMLSpanElement | null>;
-  cursorPosition: CursorPosition;
 } {
   const cursorRef = useRef<HTMLDivElement | null>(null);
   const characterRef = useRef<HTMLSpanElement | null>(null);
-  const [cursorPosition, setCursorPosition] = useState<CursorPosition>({
-    display: 'none',
-    top: 0,
-    left: 0,
-    height: 0,
-  });
 
   useEffect(() => {
     function updateCursorPosition() {
-      const character = characterRef?.current;
       const cursor = cursorRef?.current;
+      const character = characterRef?.current;
+
+      if (!cursor) return;
+
+      // Hide cursor when character ref points to `null`
       if (!character) {
-        setCursorPosition({
-          display: 'none',
-          top: 0,
-          left: 0,
-          height: 0,
-        });
+        cursor.style.display = 'none';
         return;
       }
 
+      // Update cursor position
       const newPosition = character.getBoundingClientRect();
-
-      setCursorPosition({
-        display: 'block',
-        top: newPosition.top,
-        left: newPosition.left - 2,
-        height: newPosition.height,
-      });
+      cursor.style.display = 'block';
+      cursor.style.height = `${newPosition.height - 8}px`;
+      cursor.style.transform = `translate3d(${newPosition.left - 2}px, ${
+        newPosition.top + 4
+      }px, 0px)`;
     }
+
     updateCursorPosition();
 
+    // Update cursor position on resize
     const resizeObserver = new ResizeObserver(updateCursorPosition);
     resizeObserver.observe(document.body);
 
@@ -55,7 +41,7 @@ function useCursor(userInput: UserInput): {
     };
   }, [userInput]);
 
-  return { characterRef: characterRef, cursorPosition };
+  return { characterRef, cursorRef };
 }
 
 export default useCursor;

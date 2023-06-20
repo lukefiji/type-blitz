@@ -30,12 +30,6 @@ const Character = forwardRef<HTMLSpanElement, Props>(
           isSpaceChar && inputChar !== null && 'text-gray-300',
         ])}
       >
-        {/* {isCurrentChar && (
-          <div
-            className="absolute inset-y-0 -left-0.5 my-1 w-0.5 bg-gray-800 opacity-60"
-            aria-hidden="true"
-          />
-        )} */}
         {isSpaceChar ? SPACE_KEY : displayChar}
       </span>
     );

@@ -1,6 +1,6 @@
 import { SPACE_KEY } from '@/constants/keys';
 import { PromptData, UserInput } from '@/hooks/usePrompter';
-import clsxMerge from '@/utils/clsxMerge';
+import cn from '@/utils/cn';
 import { useMemo } from 'react';
 
 interface Props {
@@ -32,10 +32,10 @@ const CharacterList = ({ promptData, userInput }: Props) => {
   console.log({ promptWords });
 
   return (
-    <div className="flex max-w-xl flex-wrap justify-center gap-1">
+    <div className="flex max-w-xl flex-wrap justify-center">
       {promptWords.map((wordData, i) => {
         return (
-          <span key={i} className="flex gap-1">
+          <span key={i} className="flex">
             {wordData.map((charData) => {
               const inputChar = userInput[charData.index] || null;
               const isInputMatching = inputChar === charData.char;
@@ -43,23 +43,23 @@ const CharacterList = ({ promptData, userInput }: Props) => {
 
               const displayChar = inputChar ?? charData.char;
               const isSpaceChar = displayChar === ' ';
+              const isCurrentChar = userInput.length === charData.index;
 
               return (
                 <span
                   key={charData.index}
-                  className={clsxMerge([
-                    'flex h-12 w-8 flex-shrink-0 items-center justify-center',
-                    'rounded-md border-2 border-solid',
-                    isSpaceChar && 'bg-gray-100 text-gray-300',
-                    isInputMatching &&
-                      'border-gray-400 bg-green-300 text-gray-800',
-                    isInputMismatching &&
-                      'border-gray-400 bg-red-200 text-gray-800',
-                    isSpaceChar &&
-                      inputChar !== null &&
-                      'border-gray-400 text-gray-400',
+                  className={cn([
+                    'relative',
+                    'font-mono text-3xl font-light leading-snug  lg:text-4xl lg:leading-snug',
+                    isSpaceChar && 'text-gray-200',
+                    isInputMatching && 'bg-green-200 text-gray-800',
+                    isInputMismatching && 'bg-red-200 text-gray-800',
+                    isSpaceChar && inputChar !== null && 'text-gray-300',
                   ])}
                 >
+                  {isCurrentChar && (
+                    <div className="absolute inset-y-0 -left-0.5 my-1 w-0.5 bg-gray-800 opacity-60"></div>
+                  )}
                   {isSpaceChar ? SPACE_KEY : displayChar}
                 </span>
               );

@@ -1,18 +1,21 @@
 import usePrompter from '@/hooks/usePrompter';
 import { useEffect, useRef } from 'react';
-import CharacterList from './CharacterList';
+import PromptDisplay from './PromptDisplay';
 import Stats from './Stats';
 import { Input } from './ui/input';
 
-function App() {
-  const { promptData, userInput, numErrors, handleKeyDown } = usePrompter(
-    'The quick brown fox jumps over the lazy dog.'
-  );
+const SAMPLE_PROMPT = `The quick brown fox jumps over the lazy dog. The lazy brown dog jumped over the quick fox.
 
+The lazy brown dog jumped over the quick fox. The quick brown fox jumps over the lazy dog.`;
+
+function App() {
   const inputRef = useRef<HTMLInputElement | null>(null);
   useEffect(() => {
     inputRef?.current?.focus();
   }, []);
+
+  const { sentenceData, userInput, numErrors, handleKeyDown } =
+    usePrompter(SAMPLE_PROMPT);
 
   return (
     <main className="flex min-h-screen w-full font-sans">
@@ -24,7 +27,7 @@ function App() {
           Type Blitz
         </h1>
 
-        <CharacterList promptData={promptData} userInput={userInput} />
+        <PromptDisplay sentenceData={sentenceData} userInput={userInput} />
 
         <Stats numErrors={numErrors} />
 
@@ -32,7 +35,7 @@ function App() {
           type="text"
           ref={inputRef}
           onKeyDown={handleKeyDown}
-          value={userInput.join('')}
+          value={userInput.join('').replace('↵', ' ')}
           onChange={() => null}
           placeholder="Begin typing here"
         />

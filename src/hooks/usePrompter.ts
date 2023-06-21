@@ -7,10 +7,12 @@ export type CharData = {
   index: number;
 };
 export type PromptData = Array<CharData>;
+export type SentenceData = Array<PromptData>;
 export type UserInput = Array<string>;
 
 type PromptState = {
   promptData: PromptData;
+  sentenceData: SentenceData;
   userInput: UserInput;
   numErrors: number;
   inputLength: number;
@@ -71,39 +73,51 @@ function promptReducer(draft: PromptState, action: PromptAction) {
   }
 }
 
-const initialPromptState = {
-  prompt: [],
+const initialPromptState: PromptState = {
+  sentenceData: [],
+  promptData: [],
   userInput: [],
   numErrors: 0,
   inputLength: 0,
 };
 
 function getInitialPromptState(message: string): PromptState {
-  // Split message into array of characters
-  const trimmedMessage = message.trim().split('');
+  const sentences = message
+    .split('\n')
+    .filter(Boolean)
+    .map((text) => text.trim().split('').filter(Boolean));
+  let counter = 0;
+  const sentenceData = sentences.map((sentence) => {
+    const newSentence = sentence.map((char) => ({
+      char,
+      index: counter++,
+    }));
 
-  // Convert each character into PromptChar[]
-  const promptData: PromptData = trimmedMessage.map((char, index) => ({
-    char,
-    index,
-  }));
+    // Add enter key at end of sentence
+    newSentence.push({
+      char: RETURN_DISPLAY_KEY,
+      index: counter++,
+    });
 
-  // Add enter key at end of string
-  promptData.push({
-    char: RETURN_DISPLAY_KEY,
-    index: promptData.length,
+    return newSentence;
   });
 
-  return { ...initialPromptState, promptData };
+  const promptData = sentenceData.flat();
+
+  return {
+    ...initialPromptState,
+    sentenceData,
+    promptData,
+  };
 }
 
 function usePrompter(message: string): {
-  promptData: PromptData;
+  sentenceData: SentenceData;
   userInput: UserInput;
   numErrors: number;
   handleKeyDown: (e: KeyboardEvent<HTMLInputElement>) => void;
 } {
-  const [{ promptData, userInput, numErrors }, dispatch] = useImmerReducer(
+  const [{ sentenceData, userInput, numErrors }, dispatch] = useImmerReducer(
     promptReducer,
     initialPromptState,
     () => getInitialPromptState(message)
@@ -115,7 +129,7 @@ function usePrompter(message: string): {
     [dispatch]
   );
 
-  return { promptData, userInput, numErrors, handleKeyDown };
+  return { sentenceData, userInput, numErrors, handleKeyDown };
 }
 
 export default usePrompter;

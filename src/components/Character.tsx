@@ -26,11 +26,14 @@ const Character = forwardRef<HTMLSpanElement, Props>(
         ref={isCurrentChar ? ref : null}
         className={cn([
           'relative',
-          'font-mono text-3xl font-light leading-snug  lg:text-4xl lg:leading-snug',
-          isInputMatching && 'bg-green-200 text-gray-800',
-          isInputMismatching && 'bg-red-200 text-gray-800',
-          isSpecialChar && 'text-gray-300',
-          isSpecialChar && inputChar !== null && 'text-gray-500',
+          'font-mono text-3xl font-light leading-snug lg:text-4xl lg:leading-snug',
+          'text-gray-800 dark:text-gray-200',
+          isInputMatching && 'bg-green-200 dark:bg-green-700 ',
+          isInputMismatching && 'bg-red-200 dark:bg-red-700 ',
+          isSpecialChar && 'text-gray-300 dark:text-gray-700',
+          isSpecialChar &&
+            inputChar !== null &&
+            'text-gray-500 dark:text-gray-400',
         ])}
       >
         {isSpaceChar ? SPACE_DISPLAY_KEY : displayChar}

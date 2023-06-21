@@ -20,14 +20,22 @@ type PromptState = {
 
 enum ActionTypes {
   keyDown = 'TYPE',
+  reset = 'RESET',
 }
 
-type PromptAction = {
-  type: ActionTypes;
+type KeyDownAction = {
+  type: ActionTypes.keyDown;
   payload: string;
 };
 
-function promptReducer(draft: PromptState, action: PromptAction) {
+type ResetAction = {
+  type: ActionTypes.reset;
+  payload: string;
+};
+
+type PromptActions = KeyDownAction | ResetAction;
+
+function promptReducer(draft: PromptState, action: PromptActions) {
   switch (action.type) {
     case ActionTypes.keyDown: {
       const key = action.payload;
@@ -65,6 +73,10 @@ function promptReducer(draft: PromptState, action: PromptAction) {
       }
 
       draft.userInput.push(key);
+      break;
+    }
+    case ActionTypes.reset: {
+      return getInitialPromptState(action.payload);
       break;
     }
     default: {
@@ -115,6 +127,7 @@ function usePrompter(message: string): {
   sentenceData: SentenceData;
   userInput: UserInput;
   numErrors: number;
+  handleReset: VoidFunction;
   handleKeyDown: (e: KeyboardEvent<HTMLInputElement>) => void;
 } {
   const [{ sentenceData, userInput, numErrors }, dispatch] = useImmerReducer(
@@ -129,7 +142,11 @@ function usePrompter(message: string): {
     [dispatch]
   );
 
-  return { sentenceData, userInput, numErrors, handleKeyDown };
+  const handleReset = useCallback(() => {
+    dispatch({ type: ActionTypes.reset, payload: message });
+  }, [dispatch, message]);
+
+  return { sentenceData, userInput, numErrors, handleKeyDown, handleReset };
 }
 
 export default usePrompter;

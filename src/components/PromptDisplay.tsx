@@ -3,6 +3,7 @@ import Cursor from '@/components/ui/Cursor';
 import useCursor from '@/hooks/useCursor';
 import usePromptSentences from '@/hooks/usePromptSentences';
 import { SentenceData, UserInput } from '@/hooks/usePrompter';
+import cn from '@/utils/cn';
 
 interface Props {
   sentenceData: SentenceData;
@@ -19,7 +20,13 @@ const PromptDisplay = ({ sentenceData, userInput }: Props) => {
 
       {promptSentences.map((promptWords, i) => {
         return (
-          <div key={i} className="mb-8 flex flex-wrap justify-center">
+          <div
+            key={i}
+            className={cn([
+              'flex flex-wrap justify-center',
+              i < promptSentences.length - 1 && 'mb-8',
+            ])}
+          >
             {promptWords.map((wordData, i) => {
               return (
                 <span key={i} className="flex">

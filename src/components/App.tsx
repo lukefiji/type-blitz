@@ -39,7 +39,7 @@ function App() {
           type="text"
           ref={inputRef}
           onKeyDown={handleKeyDown}
-          value={userInput.join('').replace('↵', ' ')}
+          value={userInput.join('')}
           onChange={() => null}
           placeholder="Begin typing here"
         />

@@ -1,5 +1,6 @@
 import usePrompter from '@/hooks/usePrompter';
-import { useEffect, useRef } from 'react';
+import useStats from '@/hooks/useStats';
+import { useCallback, useEffect, useRef } from 'react';
 import PromptDisplay from './PromptDisplay';
 import Stats from './Stats';
 import ThemeToggle from './ThemeToggle';
@@ -16,11 +17,21 @@ function App() {
     inputRef?.current?.focus();
   }, []);
 
-  const { sentenceData, userInput, numErrors, handleKeyDown, handleReset } =
+  const { sentenceData, userInput, numErrors, handleKeyDown, resetPrompter } =
     usePrompter(SAMPLE_PROMPT);
 
+  const { wordsPerMinute, accuracy, resetTimer } = useStats({
+    userInput,
+    numErrors,
+  });
+
+  const handleReset = useCallback(() => {
+    resetPrompter();
+    resetTimer();
+  }, [resetPrompter, resetTimer]);
+
   return (
-    <main className="flex min-h-screen w-full font-sans">
+    <main className="flex min-h-screen w-full px-4 font-sans">
       <div className="mx-auto mt-6 flex flex-col content-center gap-8">
         <ThemeToggle />
 
@@ -33,7 +44,11 @@ function App() {
 
         <PromptDisplay sentenceData={sentenceData} userInput={userInput} />
 
-        <Stats numErrors={numErrors} />
+        <Stats
+          wordsPerMinute={wordsPerMinute}
+          accuracy={accuracy}
+          numErrors={numErrors}
+        />
 
         <Input
           type="text"

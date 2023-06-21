@@ -127,7 +127,7 @@ function usePrompter(message: string): {
   sentenceData: SentenceData;
   userInput: UserInput;
   numErrors: number;
-  handleReset: VoidFunction;
+  resetPrompter: VoidFunction;
   handleKeyDown: (e: KeyboardEvent<HTMLInputElement>) => void;
 } {
   const [{ sentenceData, userInput, numErrors }, dispatch] = useImmerReducer(
@@ -142,11 +142,17 @@ function usePrompter(message: string): {
     [dispatch]
   );
 
-  const handleReset = useCallback(() => {
+  const resetPrompter = useCallback(() => {
     dispatch({ type: ActionTypes.reset, payload: message });
   }, [dispatch, message]);
 
-  return { sentenceData, userInput, numErrors, handleKeyDown, handleReset };
+  return {
+    sentenceData,
+    userInput,
+    numErrors,
+    handleKeyDown,
+    resetPrompter,
+  };
 }
 
 export default usePrompter;

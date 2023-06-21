@@ -1,6 +1,8 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 
 interface Props {
+  wordsPerMinute: number;
+  accuracy: number;
   numErrors: number;
 }
 
@@ -22,12 +24,12 @@ const StatCard = ({ title, value }: StatCardProps) => {
   );
 };
 
-const Stats = ({ numErrors }: Props) => {
+const Stats = ({ wordsPerMinute, accuracy, numErrors }: Props) => {
   return (
     <div className="flex justify-between gap-4">
+      <StatCard title="WPM" value={wordsPerMinute} />
+      <StatCard title="Accuracy" value={`${accuracy}%`} />
       <StatCard title="Errors" value={numErrors} />
-      <StatCard title="WPM" value={0} />
-      <StatCard title="Speed" value={0} />
       <StatCard title="Errors/min" value={0} />
     </div>
   );

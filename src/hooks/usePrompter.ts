@@ -77,7 +77,6 @@ function promptReducer(draft: PromptState, action: PromptActions) {
     }
     case ActionTypes.reset: {
       return getInitialPromptState(action.payload);
-      break;
     }
     default: {
       break;

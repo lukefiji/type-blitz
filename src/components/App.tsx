@@ -1,5 +1,7 @@
+import { SAMPLE_PROMPTS } from '@/constants/prompts';
 import usePrompter from '@/hooks/usePrompter';
 import useStats from '@/hooks/useStats';
+import random from 'lodash/random';
 import { useCallback, useEffect, useRef } from 'react';
 import PromptDisplay from './PromptDisplay';
 import Stats from './Stats';
@@ -7,18 +9,17 @@ import ThemeToggle from './ThemeToggle';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 
-const SAMPLE_PROMPT = `The quick brown fox jumps over the lazy dog. The lazy brown dog jumped over the quick fox.
-
-The lazy brown dog jumped over the quick fox. The quick brown fox jumps over the lazy dog.`;
+const prompt = SAMPLE_PROMPTS[random(0, SAMPLE_PROMPTS.length - 1)];
 
 function App() {
+  // Focus input element on page load
   const inputRef = useRef<HTMLInputElement | null>(null);
   useEffect(() => {
     inputRef?.current?.focus();
   }, []);
 
   const { sentenceData, userInput, numErrors, handleKeyDown, resetPrompter } =
-    usePrompter(SAMPLE_PROMPT);
+    usePrompter(prompt);
 
   const { wordsPerMinute, accuracy, resetTimer } = useStats({
     userInput,

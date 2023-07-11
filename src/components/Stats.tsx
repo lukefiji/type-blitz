@@ -13,7 +13,7 @@ interface StatCardProps {
 
 const StatCard = ({ title, value }: StatCardProps) => {
   return (
-    <Card className="grow">
+    <Card>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <CardTitle className="text-sm font-medium">{title}</CardTitle>
       </CardHeader>
@@ -26,8 +26,8 @@ const StatCard = ({ title, value }: StatCardProps) => {
 
 const Stats = ({ wordsPerMinute, accuracy, numErrors }: Props) => {
   return (
-    <div className="flex justify-between gap-4">
-      <StatCard title="WPM" value={wordsPerMinute} />
+    <div className="columns-2 gap-4 space-y-4 md:columns-4">
+      <StatCard title="WPM" value={Math.max(0, wordsPerMinute)} />
       <StatCard title="Accuracy" value={`${accuracy}%`} />
       <StatCard title="Errors" value={numErrors} />
       <StatCard title="Errors/min" value={0} />

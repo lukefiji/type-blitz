@@ -5,6 +5,8 @@ import { defineConfig } from 'vite';
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  // Deploy to /type-blitz/
+  base: '/type-blitz/',
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
